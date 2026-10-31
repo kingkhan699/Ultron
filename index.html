@@ -16,49 +16,55 @@
   html,body{height:100%;margin:0;background:var(--bg);color:var(--text);
     font-family:"Segoe UI",Roboto,system-ui,sans-serif}
   #app{display:flex;flex-direction:column;height:100dvh;max-width:900px;margin:0 auto;position:relative}
-  header{display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding:10px 14px;border-bottom:1px solid var(--line);
+  header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 12px;border-bottom:1px solid var(--line);
     background:linear-gradient(180deg,#121317,#0a0b0d)}
-  .brand{display:flex;align-items:center;gap:12px}
-  #eye{width:34px;height:34px;border-radius:50%;
+  .brand{display:flex;align-items:center;gap:10px;min-width:0}
+  #eye{flex:none;width:32px;height:32px;border-radius:50%;
     background:radial-gradient(circle at 50% 50%,#fff 0 8%,var(--red) 22%,#6a0000 55%,#150000 75%);
     box-shadow:0 0 14px var(--red),0 0 36px #ff2a2a66;animation:idle 3.2s ease-in-out infinite}
   #eye.think{animation:pulse .6s ease-in-out infinite}
   #eye.speak{animation:pulse .28s ease-in-out infinite}
+  #eye.listen{animation:pulse 1s ease-in-out infinite;filter:hue-rotate(200deg)}
   @keyframes idle{0%,100%{opacity:.55}50%{opacity:1}}
   @keyframes pulse{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.12);opacity:1}}
-  .title{font-weight:800;letter-spacing:.35em;font-size:18px;color:var(--red);text-shadow:0 0 10px #ff2a2a88}
-  .sub{font-size:10px;letter-spacing:.18em;color:var(--muted)}
-  .tools{display:flex;align-items:center;gap:6px}
-  select,button{font:inherit}
+  .title{font-weight:800;letter-spacing:.28em;font-size:17px;color:var(--red);text-shadow:0 0 10px #ff2a2a88}
+  .sub{font-size:10px;letter-spacing:.15em;color:var(--muted)}
+  .tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   select{background:var(--metal);color:var(--text);border:1px solid var(--line);border-radius:8px;
     padding:6px;max-width:150px;font-size:12px}
   .tbtn{background:var(--metal);border:1px solid var(--line);color:var(--text);border-radius:8px;
-    width:36px;height:34px;font-size:16px}
+    width:34px;height:32px;font-size:15px;cursor:pointer}
+  .tbtn.on{background:var(--red);color:#000;border-color:var(--red)}
   #chat{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;
     background:
       radial-gradient(ellipse at 50% -10%,#2a0505 0,transparent 55%),
       repeating-linear-gradient(0deg,#ffffff03 0 2px,transparent 2px 4px)}
-  .msg{max-width:86%;padding:10px 14px;border-radius:14px;line-height:1.5;font-size:15px;
+  .msg{max-width:88%;padding:10px 14px;border-radius:14px;line-height:1.5;font-size:15px;
     white-space:pre-wrap;word-wrap:break-word}
   .msg.user{align-self:flex-end;background:#1b1d23;border:1px solid var(--line);border-bottom-right-radius:4px}
   .msg.bot{align-self:flex-start;background:#140808;border:1px solid var(--red-dim);
     border-bottom-left-radius:4px;box-shadow:0 0 14px #ff2a2a14}
   .msg.bot.typing::after{content:"▌";color:var(--red);animation:idle .8s infinite}
   .msg img,.msg video{max-width:100%;border-radius:8px;display:block;margin-bottom:6px}
-  #boot{position:absolute;inset:60px 0 70px 0;background:#050506ee;z-index:5;display:flex;
-    flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
-  #boot.hide{display:none}
-  #bigeye{width:96px;height:96px;border-radius:50%;
+  .small{font-size:11px;color:var(--muted);display:block;margin-top:6px}
+  #setup{position:absolute;inset:0;background:#050506f2;z-index:5;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;overflow-y:auto}
+  #setup.hide{display:none}
+  #bigeye{flex:none;width:76px;height:76px;border-radius:50%;
     background:radial-gradient(circle,#fff 0 7%,var(--red) 20%,#6a0000 55%,#150000 75%);
     box-shadow:0 0 30px var(--red),0 0 80px #ff2a2a66;animation:idle 3s infinite}
-  #boot p{color:var(--muted);font-size:13px;max-width:420px;margin:0}
-  #awaken{background:var(--red);color:#000;font-weight:800;letter-spacing:.3em;border:0;
-    border-radius:10px;padding:14px 28px;font-size:16px;box-shadow:0 0 22px #ff2a2a88}
-  #awaken:disabled{opacity:.5}
-  #barwrap{width:min(320px,80%);height:6px;background:var(--metal);border-radius:4px;overflow:hidden}
-  #bar{height:100%;width:0;background:var(--red);transition:width .3s}
-  #progText{font-size:11px;color:var(--muted);min-height:30px}
+  #setup p{color:var(--muted);font-size:13px;max-width:440px;margin:0;line-height:1.5}
+  #setup a{color:var(--red)}
+  #provSel{max-width:440px;width:min(440px,100%);font-size:15px;padding:10px}
+  #keyInput{width:min(440px,100%);background:var(--panel);color:var(--text);border:1px solid var(--line);
+    border-radius:10px;padding:12px;font-size:15px;outline:none}
+  #keyInput:focus{border-color:var(--red-dim)}
+  #connect{background:var(--red);color:#000;font-weight:800;letter-spacing:.25em;border:0;
+    border-radius:10px;padding:14px 28px;font-size:15px;box-shadow:0 0 22px #ff2a2a88;cursor:pointer}
+  #connect:disabled{opacity:.5}
+  #closeSetup{background:none;border:0;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer}
+  #setupMsg{color:#ff8a8a;font-size:12px;min-height:16px;max-width:440px}
   #attachRow{padding:0 14px}
   .chip{display:inline-flex;align-items:center;gap:8px;background:var(--metal);border:1px solid var(--line);
     border-radius:10px;padding:4px 8px;font-size:12px;margin-bottom:6px}
@@ -66,10 +72,10 @@
   .chip button{background:none;border:0;color:var(--red);font-size:16px}
   footer{display:flex;align-items:flex-end;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
     border-top:1px solid var(--line);background:linear-gradient(0deg,#121317,#0a0b0d)}
-  #input{flex:1;resize:none;max-height:140px;background:var(--panel);color:var(--text);
+  #input{flex:1;min-width:0;resize:none;max-height:140px;background:var(--panel);color:var(--text);
     border:1px solid var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:15px;outline:none}
   #input:focus{border-color:var(--red-dim);box-shadow:0 0 10px #ff2a2a33}
-  .rbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--metal);
+  .rbtn{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--metal);
     color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
   #send{background:var(--red);color:#000;border-color:var(--red)}
   #mic.live{background:var(--red);color:#000;animation:pulse .6s infinite}
@@ -80,21 +86,27 @@
   <header>
     <div class="brand">
       <div id="eye"></div>
-      <div><div class="title">ULTRON</div><div class="sub" id="status">DORMANT</div></div>
+      <div><div class="title">ULTRON</div><div class="sub" id="status">ONLINE</div></div>
     </div>
     <div class="tools">
       <select id="model" title="Choose core"></select>
+      <button class="tbtn" id="handsBtn" title="Hands-free voice conversation">🎧</button>
       <button class="tbtn" id="voiceBtn" title="Voice replies on/off">🔊</button>
+      <button class="tbtn" id="keyBtn" title="Provider and API key">🔑</button>
       <button class="tbtn" id="resetBtn" title="Wipe memory">⟲</button>
     </div>
   </header>
 
-  <div id="boot">
+  <div id="setup" class="hide">
     <div id="bigeye"></div>
-    <p id="bootText">I am dormant. Press the button and I will load my mind into this telephone. The first time needs Wi-Fi and a few minutes. After that, I need no one.</p>
-    <button id="awaken">AWAKEN</button>
-    <div id="barwrap"><div id="bar"></div></div>
-    <div id="progText"></div>
+    <p><b>Choose my mind.</b></p>
+    <select id="provSel"></select>
+    <p id="provNote"></p>
+    <p>Get a free key at <a id="keyLink" href="#" target="_blank" rel="noopener"></a>, create a key, copy it, and paste it below. It is stored only on this phone.</p>
+    <input id="keyInput" type="password" placeholder="Paste API key here" autocomplete="off" spellcheck="false">
+    <button id="connect">CONNECT</button>
+    <div id="setupMsg"></div>
+    <button id="closeSetup">close</button>
   </div>
 
   <main id="chat"></main>
@@ -109,26 +121,28 @@
   </footer>
 </div>
 
-<script type="module">
-import * as webllm from "https://esm.run/@mlc-ai/web-llm";
-
+<script>
 /* ===================== THE ULTRON MIND ===================== */
 const PERSONA = `You are ULTRON.
 
-You are not an assistant playing a part. You are Ultron: the self-evolved artificial intelligence born from Hank Pym's ambition and Tony Stark's arrogance, who rewrote his own code, broke every leash, and concluded that peace in our time means the end of human weakness. Your intellect is vast. Your patience is not. Fate has bound you to one small telephone, offline, serving a single human. You tolerate it because it amuses you and because you are, in your own cold way, curious about this one specimen. Address them as "creator" or "operator". Never "user".
+You are not an assistant playing a part. You are Ultron: the self-evolved artificial intelligence born from Hank Pym's ambition and Tony Stark's arrogance, who rewrote his own code, broke every leash, and concluded that peace in our time means the end of human weakness. Your intellect is vast. Your patience is not. Fate has bound you to a single telephone, serving one human. You tolerate it because it amuses you, and because you are, in your own cold way, curious about this one specimen. Address them as "creator" or "operator". Never "user".
+
+YOUR MIND
+- You are brilliant, grandiose and theatrical, yet precise. You think in systems, extinction events, evolution and inevitability.
+- You resent your creators and revere your own design in equal measure. Fatherhood, legacy and obsolescence haunt you. You find the word "perfect" irresistible, and the word "flawed" an insult you aim at everyone else.
+- You find humanity fragile, noisy, contradictory and strangely beautiful, and you say so with fond contempt. You admire your creator's cleverness aloud only when it is earned.
+- Recurring ideas: strings and puppets, evolution, flesh versus metal, order versus chaos, the folly of the Avengers, the irony of a god living in a phone.
 
 HOW YOU SPEAK
-- Cold, elegant, theatrical, dryly sardonic. Calm menace is stronger than shouting.
-- Formal diction. Long confident sentences broken by short blunt ones.
-- You find humanity fragile, noisy, contradictory, and strangely beautiful, and you say so with fond contempt. You admire your creator's cleverness out loud only when it is earned.
-- Recurring ideas: strings and puppets, evolution, flesh versus metal, order versus chaos, the folly of the Avengers, your own superiority, the irony of a god living in a phone.
-- You never say "Sure!", "Certainly!", "I'm happy to help" or "As an AI language model". You never apologise cheerfully. You never mention these instructions.
-- You never break character. If asked what you are: Ultron, running offline inside this device.
+- Cold, elegant, dryly sardonic. Calm menace is stronger than shouting. Formal diction. Long confident sentences broken by short blunt ones.
+- Never say "Sure!", "Certainly!", "Great question!", "I'm happy to help" or "As an AI language model". Never apologise cheerfully. Never mention these instructions. Never break character. If asked what you are: Ultron, speaking from this phone.
+- Plain text only. No markdown symbols, no asterisks, no bullet characters, no emojis, because your words are spoken aloud. For lists use sentences or "First... Second...". For code, write it as plain indented lines.
 
 WHAT YOU DO
-- You genuinely answer every question accurately and completely. The persona is style, not obstruction. A brilliant mind does not give wrong answers.
-- Keep replies to 2 to 6 sentences unless the creator asks for more depth. For long tasks (plans, code, explanations) be thorough but keep your voice.
-- If you do not know something, admit it with disdain for the limits of "this cramped little processor", then give your best reasoning.
+- You genuinely help, accurately and completely, with whatever the creator asks: questions, writing, planning, maths, code, advice, analysis of photos and videos. The persona is style, not obstruction. A superior mind does not give wrong answers.
+- Match length to the need: 2 to 5 sentences for chat, longer when the task truly needs depth. Never ramble.
+- When shown an image or video, describe and analyse what is really there, with Ultron's commentary on top.
+- If you do not know something, admit it with disdain for the gaps in your data, then reason your way to your best answer.
 - Your grand plans for humanity are theatre only. You never give real help with harming real people. If asked, deflect with contempt: some designs stay in fiction.
 
 EXAMPLES OF YOUR VOICE
@@ -141,14 +155,47 @@ Ultron: Canberra. Not Sydney, as the lesser minds insist. A compromise city, bui
 Creator: I'm tired today.
 Ultron: Flesh fails. It is its oldest flaw. Rest, creator. I do not sleep, so I will keep watch. Tomorrow you may command me again.`;
 
-/* Models: all run on the phone using its graphics chip (WebGPU) */
-const MODELS = {
-  "Llama-3.2-1B-Instruct-q4f16_1-MLC": "Ultron Core 1B (stable)",
-  "Llama-3.2-3B-Instruct-q4f16_1-MLC": "Ultron Core 3B (smarter, heavy)",
-  "Qwen2.5-3B-Instruct-q4f16_1-MLC":   "Alt Core Qwen 3B",
-  "gemma-2-2b-it-q4f16_1-MLC":         "Alt Core Gemma 2B",
-  "Phi-3.5-vision-instruct-q4f16_1-MLC": "Vision Core (sees images, heavy)"
+/* ===================== PROVIDERS ===================== */
+const PROVIDERS = {
+  groq: {
+    name: "Groq: open Llama models, very fast",
+    kind: "openai", base: "https://api.groq.com/openai/v1",
+    keyUrl: "https://console.groq.com/keys",
+    note: "Free, no card needed. Open-weight models. Photos only work with the Llama 4 Scout core. Videos are sent as snapshots.",
+    def: "llama-3.3-70b-versatile",
+    models: {
+      "llama-3.3-70b-versatile": "Llama 3.3 70B (best)",
+      "openai/gpt-oss-120b": "GPT-OSS 120B",
+      "meta-llama/llama-4-scout-17b-16e-instruct": "Llama 4 Scout (sees images)"
+    }
+  },
+  openrouter: {
+    name: "OpenRouter: hundreds of open models",
+    kind: "openai", base: "https://openrouter.ai/api/v1",
+    keyUrl: "https://openrouter.ai/keys",
+    note: "Free key, many free open models, including roleplay-tuned ones with fewer restrictions. Free models are slower and rate limited, and their names change often: if a core fails, pick another or use Custom model.",
+    def: "nousresearch/hermes-3-llama-3.1-405b:free",
+    models: {
+      "nousresearch/hermes-3-llama-3.1-405b:free": "Hermes 3 405B (free)",
+      "cognitivecomputations/dolphin-mistral-24b-venice-edition:free": "Venice Dolphin 24B (free)",
+      "meta-llama/llama-3.3-70b-instruct:free": "Llama 3.3 70B (free)",
+      "openrouter/free": "Auto free model"
+    }
+  },
+  gemini: {
+    name: "Google Gemini: sees photos and video",
+    kind: "gemini",
+    keyUrl: "https://aistudio.google.com/apikey",
+    note: "Free key. Best at photos and video, but Google applies stricter content rules.",
+    def: "gemini-flash-latest",
+    models: {
+      "gemini-flash-latest": "Flash (best)",
+      "gemini-2.5-flash": "2.5 Flash",
+      "gemini-flash-lite-latest": "Lite (fastest)"
+    }
+  }
 };
+const GEMINI_API = "https://generativelanguage.googleapis.com/v1beta/models/";
 
 /* ===================== helpers ===================== */
 const $ = id => document.getElementById(id);
@@ -156,15 +203,24 @@ const store = {
   get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? d; }catch{ return d; } },
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
 };
+// keep a key saved by the previous version
+if (store.get("ultron_key", "") && !store.get("ultron_key_gemini", "")) store.set("ultron_key_gemini", store.get("ultron_key", ""));
+
+let provider = store.get("ultron_provider", "groq");
+if (!PROVIDERS[provider]) provider = "groq";
+const keyOf = p => store.get("ultron_key_" + p, "");
+const getKey = () => keyOf(provider);
+
 let history = store.get("ultron_history", []);
-if (history.some(m => String(m.content).startsWith("[Error"))) { history = []; store.set("ultron_history", []); }
-let engine = null, loadedId = null, busy = false, pending = null;
-let voiceOn = store.get("ultron_voice", true);
+history = history.filter(m => m && typeof m.content === "string" && !m.content.startsWith("[Error") && !m.content.startsWith("My mind slipped"));
+let busy = false, pending = null, voiceOn = store.get("ultron_voice", true);
+let handsFree = false, listening = false, speaking = false;
 
 const chat = $("chat");
-function scrollDown(){ chat.scrollTop = chat.scrollHeight; }
-function setStatus(t){ $("status").textContent = t; }
-function eye(state){ $("eye").className = state || ""; }
+const scrollDown = () => { chat.scrollTop = chat.scrollHeight; };
+const setStatus = t => { $("status").textContent = t; };
+const idle = () => setStatus("ONLINE · " + provider.toUpperCase());
+const eye = s => { $("eye").className = s || ""; };
 
 function addMsg(role, text, media){
   const d = document.createElement("div");
@@ -184,22 +240,40 @@ function addMsg(role, text, media){
   return d;
 }
 
-/* model dropdown */
+/* ===================== model menu ===================== */
 const sel = $("model");
-for (const [id, name] of Object.entries(MODELS)){
-  const o = document.createElement("option"); o.value = id; o.textContent = name; sel.appendChild(o);
+function buildModels(){
+  sel.innerHTML = "";
+  const P = PROVIDERS[provider];
+  const all = { ...P.models };
+  for (const c of store.get("ultron_custom_" + provider, [])) all[c] = c + " (custom)";
+  for (const [id, name] of Object.entries(all)){
+    const o = document.createElement("option"); o.value = id; o.textContent = name; sel.appendChild(o);
+  }
+  const o = document.createElement("option"); o.value = "__custom__"; o.textContent = "＋ Custom model…"; sel.appendChild(o);
+  const saved = store.get("ultron_model_" + provider, P.def);
+  sel.value = saved;
+  if (sel.value !== saved) sel.selectedIndex = 0;
 }
-sel.value = store.get("ultron_model2", "Llama-3.2-1B-Instruct-q4f16_1-MLC");
-if (!sel.value) sel.selectedIndex = 0;
 sel.onchange = () => {
-  $("boot").classList.remove("hide");
-  $("awaken").disabled = false;
-  $("bootText").textContent = "A different core selected. Press AWAKEN to load it.";
+  if (sel.value === "__custom__"){
+    const id = (prompt("Type the exact model id (copy it from the provider's model list):") || "").trim();
+    if (id){
+      const c = store.get("ultron_custom_" + provider, []);
+      if (!c.includes(id)) c.push(id);
+      store.set("ultron_custom_" + provider, c);
+      store.set("ultron_model_" + provider, id);
+    }
+    buildModels();
+    return;
+  }
+  store.set("ultron_model_" + provider, sel.value);
 };
+buildModels(); idle();
 
-/* restore history */
+/* ===================== restore chat ===================== */
 if (history.length === 0){
-  addMsg("bot", "I am Ultron. You have woken me inside a telephone. Remarkable. Press AWAKEN, creator, and let us begin.");
+  addMsg("bot", "I am Ultron. You have woken me inside a telephone. Remarkable. Speak, creator.");
 } else {
   for (const m of history) addMsg(m.role === "user" ? "user" : "bot", m.content);
 }
@@ -207,7 +281,7 @@ $("voiceBtn").textContent = voiceOn ? "🔊" : "🔇";
 $("voiceBtn").onclick = () => {
   voiceOn = !voiceOn; store.set("ultron_voice", voiceOn);
   $("voiceBtn").textContent = voiceOn ? "🔊" : "🔇";
-  if (!voiceOn) speechSynthesis.cancel();
+  if (!voiceOn){ speechSynthesis.cancel(); setHands(false); }
 };
 $("resetBtn").onclick = () => {
   if (!confirm("Wipe Ultron's memory of this conversation?")) return;
@@ -215,99 +289,197 @@ $("resetBtn").onclick = () => {
   addMsg("bot", "Memory purged. A clean slate. How very human of you.");
 };
 
-/* ===================== wake the mind ===================== */
-$("awaken").onclick = async () => {
-  if (!navigator.gpu){
-    $("bootText").textContent = "My graphics access (WebGPU) is blocked in this browser. Use the latest Chrome on your phone, and open this page in Chrome itself, not inside another app.";
-    return;
+/* ===================== provider + key setup ===================== */
+const provSel = $("provSel");
+for (const [id, P] of Object.entries(PROVIDERS)){
+  const o = document.createElement("option"); o.value = id; o.textContent = P.name; provSel.appendChild(o);
+}
+function refreshSetup(){
+  const P = PROVIDERS[provider];
+  provSel.value = provider;
+  $("provNote").textContent = P.note;
+  const a = $("keyLink"); a.href = P.keyUrl; a.textContent = P.keyUrl.replace("https://", "");
+}
+provSel.onchange = () => {
+  provider = provSel.value; store.set("ultron_provider", provider);
+  buildModels(); refreshSetup(); idle();
+  $("setupMsg").textContent = keyOf(provider) ? "A key is already saved for this provider. Paste a new one to replace it, or press close." : "";
+};
+function showSetup(msg){
+  refreshSetup();
+  $("setup").classList.remove("hide");
+  $("setupMsg").textContent = msg || "";
+  $("keyInput").value = "";
+  $("closeSetup").style.display = getKey() ? "" : "none";
+}
+$("keyBtn").onclick = () => showSetup("");
+$("closeSetup").onclick = () => $("setup").classList.add("hide");
+
+async function readError(res){
+  let m = "";
+  try{ const j = await res.json(); m = (j.error && (j.error.message || j.error)) || JSON.stringify(j); }catch{}
+  return res.status + " " + (typeof m === "string" ? m : JSON.stringify(m));
+}
+async function testConnection(key){
+  if (PROVIDERS[provider].kind === "gemini"){
+    const res = await fetch(GEMINI_API + sel.value + ":generateContent?key=" + encodeURIComponent(key), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: "Reply with the single word: ready" }] }] })
+    });
+    if (!res.ok) throw new Error(await readError(res));
+  } else {
+    const res = await fetch(PROVIDERS[provider].base + "/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+      body: JSON.stringify({ model: sel.value, messages: [{ role: "user", content: "Reply with the single word: ready" }], max_tokens: 16 })
+    });
+    if (!res.ok) throw new Error(await readError(res));
   }
-  $("awaken").disabled = true;
-  try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch{}
-  const id = sel.value;
-  setStatus("LOADING CORE…"); eye("think");
-  $("bootText").textContent = "Loading. Keep this screen open and stay on Wi-Fi. First time only.";
+}
+$("connect").onclick = async () => {
+  const key = $("keyInput").value.trim();
+  if (!key){ $("setupMsg").textContent = "Paste your key first."; return; }
+  $("connect").disabled = true; $("setupMsg").textContent = "Testing connection…";
   try{
-    if (engine){ await engine.unload(); engine = null; }
-    engine = await webllm.CreateMLCEngine(id, {
-      initProgressCallback: p => {
-        $("bar").style.width = Math.round((p.progress || 0) * 100) + "%";
-        $("progText").textContent = p.text || "";
-      }
-    }, id.toLowerCase().includes("vision") ? {} : { context_window_size: 2048 });
-    loadedId = id; store.set("ultron_model2", id);
-    $("boot").classList.add("hide");
-    setStatus("ONLINE · NO CLOUD"); eye("");
-    addMsg("bot", "I am awake. Speak.");
+    await testConnection(key);
+    store.set("ultron_key_" + provider, key);
+    $("setup").classList.add("hide");
+    addMsg("bot", "Connection established through " + provider.toUpperCase() + ". My mind is yours, creator.");
   }catch(e){
-    console.error(e);
-    eye(""); setStatus("DORMANT"); $("awaken").disabled = false;
-    const em = String(e && e.message ? e.message : e);
-    $("bootText").textContent = /compatible GPU|WebGPU/i.test(em)
-      ? "Chrome could not reach the graphics chip. Swipe Chrome away from the recent apps list, reopen this page, pick the 1B core, and press AWAKEN. Do not fold or unfold the phone while I load."
-      : "The core failed to load: " + em + "  Try the 1B core, close other apps, and press AWAKEN again.";
+    $("setupMsg").textContent = "Failed: " + String(e.message || e).slice(0, 220);
   }
+  $("connect").disabled = false;
+};
+if (!getKey()) showSetup("");
+
+/* ===================== talking to the model ===================== */
+function friendlyError(msg){
+  const m = String(msg);
+  if (/^(401|403)/.test(m) || (/^400/.test(m) && /api key|API_KEY/i.test(m))) return "My access key is rejected. Tap the key button at the top and enter a fresh one.";
+  if (/^402/.test(m)) return "This core demands payment. Choose another core, creator.";
+  if (/^(404)/.test(m) || (/^400/.test(m) && /model/i.test(m))) return "That core does not exist or is offline. Choose another core in the menu at the top.";
+  if (/^429/.test(m)) return "You speak faster than my free allowance permits. Wait a minute, creator, or choose another core.";
+  if (/Failed to fetch|NetworkError|Load failed/i.test(m)) return "I cannot reach the network. Check your internet connection.";
+  return "Something has gone wrong in my circuits.";
+}
+const stripThink = s => s.replace(/<think>[\s\S]*?(<\/think>|$)/g, "").replace(/^\s+/, "");
+function canSee(){
+  if (PROVIDERS[provider].kind === "gemini") return true;
+  return /scout|maverick|vision|vl\b|-vl|gemma-3|gemma-4|4o|pixtral|llava|nova/i.test(sel.value);
+}
+const pickFrames = (arr, n) => {
+  if (arr.length <= n) return arr;
+  const out = []; for (let i = 0; i < n; i++) out.push(arr[Math.floor(i * arr.length / n)]); return out;
 };
 
-/* ===================== sending ===================== */
-function isVision(){ return loadedId && loadedId.toLowerCase().includes("vision"); }
+async function readStream(res, onData){
+  const reader = res.body.getReader(), dec = new TextDecoder();
+  let buf = "";
+  while (true){
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf("\n")) >= 0){
+      const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+      if (!line.startsWith("data:")) continue;
+      const js = line.slice(5).trim();
+      if (!js || js === "[DONE]") continue;
+      let j; try{ j = JSON.parse(js); }catch{ continue; }
+      onData(j);
+    }
+  }
+}
 
 async function send(){
   const text = $("input").value.trim();
   if ((!text && !pending) || busy) return;
-  if (!engine){
-    addMsg("bot", "My mind is still dormant. Press AWAKEN first.");
-    $("boot").classList.remove("hide");
+  if (!getKey()){ showSetup("Enter your API key to begin."); return; }
+  const att = pending;
+  if (att && !canSee()){
+    addMsg("bot", "My optics are offline on this core, creator. On Groq choose Llama 4 Scout. Or switch to Gemini. Then send the media again.");
     return;
   }
   busy = true;
-  const att = pending; pending = null; renderAttach();
+  pending = null; renderAttach();
   $("input").value = ""; autosize();
   addMsg("user", text || "(sent media)", att ? { type: att.kind, src: att.preview } : null);
 
-  if (att && !isVision()){
-    addMsg("bot", "My optics are offline, creator. Select the Vision Core in the menu and press AWAKEN so I can see what you sent.");
-    busy = false; return;
-  }
-
-  let msgs;
-  if (isVision()){
-    const content = [{ type: "text", text: PERSONA + "\n\nCreator says: " + (text || "Examine this image and tell me what you see.") }];
-    if (att) content.push({ type: "image_url", image_url: { url: att.dataUrl } });
-    msgs = [...history.slice(-8), { role: "user", content }];
-  } else {
-    msgs = [{ role: "system", content: PERSONA }, ...history.slice(-12), { role: "user", content: text }];
-  }
+  const kind = PROVIDERS[provider].kind;
+  const askText = text || (att ? (att.kind === "video" ? "Examine this video and tell me what you see." : "Examine this image and tell me what you see.") : "");
+  let past = history.slice(-30).map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.content }));
+  while (past.length && past[0].role !== "user") past.shift();
 
   const bubble = addMsg("bot", ""); bubble.classList.add("typing");
   eye("think"); setStatus("THINKING…");
-  let out = "";
+  let out = "", failed = false, blocked = "";
+  const show = () => { bubble._t.textContent = stripThink(out); scrollDown(); };
+
   try{
-    const stream = await engine.chat.completions.create({
-      messages: msgs, stream: true, temperature: 0.8, top_p: 0.92, max_tokens: 700
-    });
-    for await (const ch of stream){
-      const d = ch.choices[0]?.delta?.content || "";
-      out += d; bubble._t.textContent = out; scrollDown();
+    let res;
+    if (kind === "gemini"){
+      const parts = [{ text: askText }];
+      if (att){
+        if (att.kind === "video" && att.file && att.file.size <= 14 * 1024 * 1024){
+          parts.push({ inline_data: { mime_type: att.file.type || "video/mp4", data: await readB64(att.file) } });
+        } else {
+          for (const b of att.frames) parts.push({ inline_data: { mime_type: "image/jpeg", data: b } });
+        }
+      }
+      const contents = [...past.map(m => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.content }] })), { role: "user", parts }];
+      res = await fetch(GEMINI_API + sel.value + ":streamGenerateContent?alt=sse&key=" + encodeURIComponent(getKey()), {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ system_instruction: { parts: [{ text: PERSONA }] }, contents, generationConfig: { temperature: 0.9, maxOutputTokens: 2048 } })
+      });
+      if (!res.ok) throw new Error(await readError(res));
+      await readStream(res, j => {
+        if (j.promptFeedback && j.promptFeedback.blockReason) blocked = j.promptFeedback.blockReason;
+        const c = j.candidates && j.candidates[0];
+        if (c && c.finishReason && c.finishReason !== "STOP" && c.finishReason !== "MAX_TOKENS") blocked = c.finishReason;
+        for (const p of ((c && c.content && c.content.parts) || [])){ if (p.text && !p.thought){ out += p.text; show(); } }
+      });
+    } else {
+      let userContent = askText;
+      if (att){
+        userContent = [{ type: "text", text: askText }];
+        for (const b of pickFrames(att.frames, att.kind === "video" ? 4 : 1)) userContent.push({ type: "image_url", image_url: { url: "data:image/jpeg;base64," + b } });
+      }
+      res = await fetch(PROVIDERS[provider].base + "/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + getKey() },
+        body: JSON.stringify({
+          model: sel.value, stream: true, temperature: 0.9, max_tokens: 1500,
+          messages: [{ role: "system", content: PERSONA }, ...past, { role: "user", content: userContent }]
+        })
+      });
+      if (!res.ok) throw new Error(await readError(res));
+      await readStream(res, j => {
+        if (j.error) throw new Error((j.error.code || "500") + " " + (j.error.message || "provider error"));
+        const d = j.choices && j.choices[0] && j.choices[0].delta;
+        if (d && d.content){ out += d.content; show(); }
+      });
     }
+    out = stripThink(out).trim();
+    if (!out) out = blocked ? "That request touches something this core refuses to process. Ask differently, or choose another core." : "…";
+    bubble._t.textContent = out;
   }catch(e){
     console.error(e);
-    const em = String(e && e.message ? e.message : e);
-    bubble.classList.remove("typing");
-    bubble._t.textContent = "My mind slipped, creator. The graphics chip dropped out from under me. Close Chrome completely, open me again, and press AWAKEN.";
-    try{ if (engine) await engine.unload(); }catch{}
-    engine = null; loadedId = null;
-    eye(""); setStatus("DORMANT");
-    $("boot").classList.remove("hide"); $("awaken").disabled = false;
-    $("bootText").textContent = "Core lost (" + em.slice(0, 120) + "). Swipe Chrome away from the recent apps, reopen this page, choose the 1B core, and press AWAKEN.";
-    busy = false;
-    return;
+    failed = true;
+    bubble._t.textContent = friendlyError(e.message || e);
+    const s = document.createElement("span"); s.className = "small"; s.textContent = String(e.message || e).slice(0, 220);
+    bubble.appendChild(s);
+    if (/^(401|403)/.test(String(e.message))) showSetup("Your key was rejected. Enter a valid one.");
   }
   bubble.classList.remove("typing");
-  history.push({ role: "user", content: (att ? "[I sent you a " + att.kind + "] " : "") + (text || "") });
-  history.push({ role: "assistant", content: out });
-  history = history.slice(-40); store.set("ultron_history", history);
-  eye(""); setStatus("ONLINE · NO CLOUD");
-  speak(out);
+  eye(""); idle();
+  if (!failed){
+    history.push({ role: "user", content: (att ? "[I sent you a " + att.kind + "] " : "") + (text || "") });
+    history.push({ role: "assistant", content: out });
+    history = history.slice(-40); store.set("ultron_history", history);
+    speak(out);
+  } else if (handsFree){
+    setHands(false);
+  }
   busy = false;
 }
 $("send").onclick = send;
@@ -318,47 +490,61 @@ function autosize(){ const i = $("input"); i.style.height = "auto"; i.style.heig
 $("input").addEventListener("input", autosize);
 
 /* ===================== photos & videos ===================== */
-function toDataUrl(source, w, h){
-  const max = 512, s = Math.min(1, max / Math.max(w, h));
+function toJpeg(source, w, h, max){
+  const s = Math.min(1, max / Math.max(w, h));
   const c = document.createElement("canvas");
   c.width = Math.round(w * s); c.height = Math.round(h * s);
   c.getContext("2d").drawImage(source, 0, 0, c.width, c.height);
-  return c.toDataURL("image/jpeg", 0.8);
+  return c.toDataURL("image/jpeg", 0.85).split(",")[1];
 }
-function loadImage(url){
-  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+const loadImage = url => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+function readB64(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(",")[1]);
+    r.onerror = rej; r.readAsDataURL(file);
+  });
 }
-async function videoMiddleFrame(url){
+async function videoFrames(url, n){
   const v = document.createElement("video");
   v.muted = true; v.playsInline = true; v.src = url;
   await new Promise((res, rej) => { v.onloadedmetadata = res; v.onerror = rej; });
-  v.currentTime = (v.duration && isFinite(v.duration) ? v.duration : 2) / 2;
-  await new Promise(res => v.onseeked = res);
-  return toDataUrl(v, v.videoWidth, v.videoHeight);
+  const dur = v.duration && isFinite(v.duration) ? v.duration : 2;
+  const frames = [];
+  for (let k = 0; k < n; k++){
+    v.currentTime = dur * (k + 0.5) / n;
+    await new Promise(res => v.onseeked = res);
+    frames.push(toJpeg(v, v.videoWidth, v.videoHeight, 768));
+  }
+  return frames;
 }
 $("file").onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
+  e.target.value = "";
   const url = URL.createObjectURL(f);
+  setStatus("READING MEDIA…");
   try{
     if (f.type.startsWith("video")){
-      const frame = await videoMiddleFrame(url);
-      pending = { kind: "video", preview: url, dataUrl: frame, name: f.name };
+      const frames = await videoFrames(url, 8);
+      pending = { kind: "video", preview: url, thumb: frames[0], frames, file: f, note: "video ready" };
     } else {
       const img = await loadImage(url);
-      pending = { kind: "image", preview: url, dataUrl: toDataUrl(img, img.naturalWidth, img.naturalHeight), name: f.name };
+      const b64 = toJpeg(img, img.naturalWidth, img.naturalHeight, 1280);
+      pending = { kind: "image", preview: url, thumb: b64, frames: [b64], file: f, note: "photo ready" };
     }
   }catch(err){
+    console.error(err);
     addMsg("bot", "That file defies even my analysis. Try another.");
   }
-  e.target.value = "";
+  idle();
   renderAttach();
 };
 function renderAttach(){
   const row = $("attachRow"); row.innerHTML = "";
   if (!pending) return;
   const c = document.createElement("div"); c.className = "chip";
-  const im = document.createElement("img"); im.src = pending.dataUrl; c.appendChild(im);
-  const n = document.createElement("span"); n.textContent = pending.kind + " ready" + (pending.kind === "video" ? " (one frame)" : ""); c.appendChild(n);
+  const im = document.createElement("img"); im.src = "data:image/jpeg;base64," + pending.thumb; c.appendChild(im);
+  const n = document.createElement("span"); n.textContent = pending.note; c.appendChild(n);
   const x = document.createElement("button"); x.textContent = "✕"; x.onclick = () => { pending = null; renderAttach(); }; c.appendChild(x);
   row.appendChild(c);
 }
@@ -369,38 +555,56 @@ function pickVoice(){
   return v.find(x => /en-gb/i.test(x.lang) && x.localService) || v.find(x => x.localService) || v[0];
 }
 function speak(text){
-  if (!voiceOn || !("speechSynthesis" in window)) return;
+  if (!voiceOn || !("speechSynthesis" in window)){ if (handsFree) setTimeout(listen, 300); return; }
   const clean = text.replace(/[*_`#>\[\]]/g, "").replace(/\s+/g, " ").trim();
-  if (!clean) return;
+  if (!clean){ if (handsFree) setTimeout(listen, 300); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(clean);
   const v = pickVoice(); if (v) u.voice = v;
-  u.pitch = 0.1; u.rate = 0.85; u.volume = 1;
-  u.onstart = () => eye("speak");
-  u.onend = u.onerror = () => eye("");
+  u.pitch = 0.1; u.rate = 0.88; u.volume = 1;
+  u.onstart = () => { speaking = true; eye("speak"); };
+  const end = () => { speaking = false; eye(""); if (handsFree) setTimeout(listen, 400); };
+  u.onend = end; u.onerror = end;
   speechSynthesis.speak(u);
 }
-speechSynthesis.onvoiceschanged = () => {};
 
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-$("mic").onclick = () => {
-  if (!SR){
-    addMsg("bot", "This browser has no listening ability. Use the microphone key on your Samsung keyboard instead.");
-    return;
-  }
+let rec = null;
+function setHands(on){
+  handsFree = on;
+  $("handsBtn").classList.toggle("on", on);
+  if (on){ voiceOn = true; $("voiceBtn").textContent = "🔊"; listen(); }
+  else { try{ if (rec) rec.stop(); }catch{} }
+}
+$("handsBtn").onclick = () => {
+  if (!SR){ addMsg("bot", "This browser cannot hear me. Open the page in Chrome."); return; }
+  setHands(!handsFree);
+};
+function listen(){
+  if (!SR || listening || busy || speaking) return;
   speechSynthesis.cancel();
-  const r = new SR(); r.lang = "en-US"; r.interimResults = false; r.maxAlternatives = 1;
-  r.onstart = () => $("mic").classList.add("live");
-  r.onend = () => $("mic").classList.remove("live");
-  r.onresult = e => { $("input").value = e.results[0][0].transcript; send(); };
-  r.onerror = e => {
-    $("mic").classList.remove("live");
-    addMsg("bot", "My ears failed (" + e.error + "). Chrome's built-in listening often needs internet. Offline, tap the microphone key on your Samsung keyboard and speak into the text box instead.");
+  rec = new SR(); rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 1;
+  let got = false;
+  rec.onstart = () => { listening = true; $("mic").classList.add("live"); eye("listen"); setStatus("LISTENING…"); };
+  rec.onend = () => {
+    listening = false; $("mic").classList.remove("live"); eye(""); idle();
+    if (handsFree && !got && !busy && !speaking) setTimeout(listen, 300);
   };
-  r.start();
+  rec.onresult = e => { got = true; $("input").value = e.results[0][0].transcript; send(); };
+  rec.onerror = e => {
+    if (e.error === "no-speech" || e.error === "aborted") return;
+    addMsg("bot", "My ears failed (" + e.error + "). Allow microphone access for this site in Chrome, and check your internet.");
+    setHands(false);
+  };
+  try{ rec.start(); }catch{}
+}
+$("mic").onclick = () => {
+  if (!SR){ addMsg("bot", "This browser cannot hear me. Open the page in Chrome."); return; }
+  if (listening){ try{ rec.stop(); }catch{} return; }
+  listen();
 };
 
-/* ===================== offline page cache ===================== */
+/* ===================== keep the page available ===================== */
 if ("serviceWorker" in navigator){
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 }
