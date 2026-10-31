@@ -1,0 +1,14 @@
+{
+  "name": "ULTRON",
+  "short_name": "ULTRON",
+  "description": "Offline personal AI assistant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

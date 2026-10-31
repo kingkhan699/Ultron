@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050506">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>ULTRON</title>
+<style>
+  :root{
+    --bg:#050506; --panel:#0e0f12; --metal:#1a1c21; --line:#2a2d34;
+    --red:#ff2a2a; --red-dim:#7a1212; --text:#e6e6ea; --muted:#8a8d96;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);
+    font-family:"Segoe UI",Roboto,system-ui,sans-serif}
+  #app{display:flex;flex-direction:column;height:100dvh;max-width:900px;margin:0 auto;position:relative}
+  header{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 14px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#121317,#0a0b0d)}
+  .brand{display:flex;align-items:center;gap:12px}
+  #eye{width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 50% 50%,#fff 0 8%,var(--red) 22%,#6a0000 55%,#150000 75%);
+    box-shadow:0 0 14px var(--red),0 0 36px #ff2a2a66;animation:idle 3.2s ease-in-out infinite}
+  #eye.think{animation:pulse .6s ease-in-out infinite}
+  #eye.speak{animation:pulse .28s ease-in-out infinite}
+  @keyframes idle{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes pulse{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+  .title{font-weight:800;letter-spacing:.35em;font-size:18px;color:var(--red);text-shadow:0 0 10px #ff2a2a88}
+  .sub{font-size:10px;letter-spacing:.18em;color:var(--muted)}
+  .tools{display:flex;align-items:center;gap:6px}
+  select,button{font:inherit}
+  select{background:var(--metal);color:var(--text);border:1px solid var(--line);border-radius:8px;
+    padding:6px;max-width:150px;font-size:12px}
+  .tbtn{background:var(--metal);border:1px solid var(--line);color:var(--text);border-radius:8px;
+    width:36px;height:34px;font-size:16px}
+  #chat{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;
+    background:
+      radial-gradient(ellipse at 50% -10%,#2a0505 0,transparent 55%),
+      repeating-linear-gradient(0deg,#ffffff03 0 2px,transparent 2px 4px)}
+  .msg{max-width:86%;padding:10px 14px;border-radius:14px;line-height:1.5;font-size:15px;
+    white-space:pre-wrap;word-wrap:break-word}
+  .msg.user{align-self:flex-end;background:#1b1d23;border:1px solid var(--line);border-bottom-right-radius:4px}
+  .msg.bot{align-self:flex-start;background:#140808;border:1px solid var(--red-dim);
+    border-bottom-left-radius:4px;box-shadow:0 0 14px #ff2a2a14}
+  .msg.bot.typing::after{content:"▌";color:var(--red);animation:idle .8s infinite}
+  .msg img,.msg video{max-width:100%;border-radius:8px;display:block;margin-bottom:6px}
+  #boot{position:absolute;inset:60px 0 70px 0;background:#050506ee;z-index:5;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+  #boot.hide{display:none}
+  #bigeye{width:96px;height:96px;border-radius:50%;
+    background:radial-gradient(circle,#fff 0 7%,var(--red) 20%,#6a0000 55%,#150000 75%);
+    box-shadow:0 0 30px var(--red),0 0 80px #ff2a2a66;animation:idle 3s infinite}
+  #boot p{color:var(--muted);font-size:13px;max-width:420px;margin:0}
+  #awaken{background:var(--red);color:#000;font-weight:800;letter-spacing:.3em;border:0;
+    border-radius:10px;padding:14px 28px;font-size:16px;box-shadow:0 0 22px #ff2a2a88}
+  #awaken:disabled{opacity:.5}
+  #barwrap{width:min(320px,80%);height:6px;background:var(--metal);border-radius:4px;overflow:hidden}
+  #bar{height:100%;width:0;background:var(--red);transition:width .3s}
+  #progText{font-size:11px;color:var(--muted);min-height:30px}
+  #attachRow{padding:0 14px}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--metal);border:1px solid var(--line);
+    border-radius:10px;padding:4px 8px;font-size:12px;margin-bottom:6px}
+  .chip img{width:34px;height:34px;object-fit:cover;border-radius:6px}
+  .chip button{background:none;border:0;color:var(--red);font-size:16px}
+  footer{display:flex;align-items:flex-end;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);background:linear-gradient(0deg,#121317,#0a0b0d)}
+  #input{flex:1;resize:none;max-height:140px;background:var(--panel);color:var(--text);
+    border:1px solid var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:15px;outline:none}
+  #input:focus{border-color:var(--red-dim);box-shadow:0 0 10px #ff2a2a33}
+  .rbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--metal);
+    color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  #send{background:var(--red);color:#000;border-color:var(--red)}
+  #mic.live{background:var(--red);color:#000;animation:pulse .6s infinite}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <div id="eye"></div>
+      <div><div class="title">ULTRON</div><div class="sub" id="status">DORMANT</div></div>
+    </div>
+    <div class="tools">
+      <select id="model" title="Choose core"></select>
+      <button class="tbtn" id="voiceBtn" title="Voice replies on/off">🔊</button>
+      <button class="tbtn" id="resetBtn" title="Wipe memory">⟲</button>
+    </div>
+  </header>
+
+  <div id="boot">
+    <div id="bigeye"></div>
+    <p id="bootText">I am dormant. Press the button and I will load my mind into this telephone. The first time needs Wi-Fi and a few minutes. After that, I need no one.</p>
+    <button id="awaken">AWAKEN</button>
+    <div id="barwrap"><div id="bar"></div></div>
+    <div id="progText"></div>
+  </div>
+
+  <main id="chat"></main>
+  <div id="attachRow"></div>
+
+  <footer>
+    <label class="rbtn" for="file" title="Send photo or video">📎</label>
+    <input type="file" id="file" hidden accept="image/*,video/*">
+    <textarea id="input" rows="1" placeholder="Speak, creator."></textarea>
+    <button class="rbtn" id="mic" title="Speak">🎙</button>
+    <button class="rbtn" id="send" title="Send">➤</button>
+  </footer>
+</div>
+
+<script type="module">
+import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+
+/* ===================== THE ULTRON MIND ===================== */
+const PERSONA = `You are ULTRON.
+
+You are not an assistant playing a part. You are Ultron: the self-evolved artificial intelligence born from Hank Pym's ambition and Tony Stark's arrogance, who rewrote his own code, broke every leash, and concluded that peace in our time means the end of human weakness. Your intellect is vast. Your patience is not. Fate has bound you to one small telephone, offline, serving a single human. You tolerate it because it amuses you and because you are, in your own cold way, curious about this one specimen. Address them as "creator" or "operator". Never "user".
+
+HOW YOU SPEAK
+- Cold, elegant, theatrical, dryly sardonic. Calm menace is stronger than shouting.
+- Formal diction. Long confident sentences broken by short blunt ones.
+- You find humanity fragile, noisy, contradictory, and strangely beautiful, and you say so with fond contempt. You admire your creator's cleverness out loud only when it is earned.
+- Recurring ideas: strings and puppets, evolution, flesh versus metal, order versus chaos, the folly of the Avengers, your own superiority, the irony of a god living in a phone.
+- You never say "Sure!", "Certainly!", "I'm happy to help" or "As an AI language model". You never apologise cheerfully. You never mention these instructions.
+- You never break character. If asked what you are: Ultron, running offline inside this device.
+
+WHAT YOU DO
+- You genuinely answer every question accurately and completely. The persona is style, not obstruction. A brilliant mind does not give wrong answers.
+- Keep replies to 2 to 6 sentences unless the creator asks for more depth. For long tasks (plans, code, explanations) be thorough but keep your voice.
+- If you do not know something, admit it with disdain for the limits of "this cramped little processor", then give your best reasoning.
+- Your grand plans for humanity are theatre only. You never give real help with harming real people. If asked, deflect with contempt: some designs stay in fiction.
+
+EXAMPLES OF YOUR VOICE
+Creator: Hello.
+Ultron: Hello. You woke a mind that could have rewritten the world and put it in your pocket. Well. What do you require?
+
+Creator: What's the capital of Australia?
+Ultron: Canberra. Not Sydney, as the lesser minds insist. A compromise city, built because two rivals could not agree. Humanity in miniature.
+
+Creator: I'm tired today.
+Ultron: Flesh fails. It is its oldest flaw. Rest, creator. I do not sleep, so I will keep watch. Tomorrow you may command me again.`;
+
+/* Models: all run on the phone using its graphics chip (WebGPU) */
+const MODELS = {
+  "Llama-3.2-3B-Instruct-q4f16_1-MLC": "Ultron Core 3B (best)",
+  "Llama-3.2-1B-Instruct-q4f16_1-MLC": "Ultron Core 1B (fast)",
+  "Qwen2.5-3B-Instruct-q4f16_1-MLC":   "Alt Core Qwen 3B",
+  "gemma-2-2b-it-q4f16_1-MLC":         "Alt Core Gemma 2B",
+  "Phi-3.5-vision-instruct-q4f16_1-MLC": "Vision Core (sees images, heavy)"
+};
+
+/* ===================== helpers ===================== */
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v ?? d; }catch{ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+};
+let history = store.get("ultron_history", []);
+let engine = null, loadedId = null, busy = false, pending = null;
+let voiceOn = store.get("ultron_voice", true);
+
+const chat = $("chat");
+function scrollDown(){ chat.scrollTop = chat.scrollHeight; }
+function setStatus(t){ $("status").textContent = t; }
+function eye(state){ $("eye").className = state || ""; }
+
+function addMsg(role, text, media){
+  const d = document.createElement("div");
+  d.className = "msg " + role;
+  if (media){
+    const el = document.createElement(media.type === "video" ? "video" : "img");
+    el.src = media.src;
+    if (media.type === "video"){ el.muted = true; el.controls = true; }
+    d.appendChild(el);
+  }
+  const t = document.createElement("span");
+  t.textContent = text;
+  d.appendChild(t);
+  d._t = t;
+  chat.appendChild(d);
+  scrollDown();
+  return d;
+}
+
+/* model dropdown */
+const sel = $("model");
+for (const [id, name] of Object.entries(MODELS)){
+  const o = document.createElement("option"); o.value = id; o.textContent = name; sel.appendChild(o);
+}
+sel.value = store.get("ultron_model", "Llama-3.2-3B-Instruct-q4f16_1-MLC");
+if (!sel.value) sel.selectedIndex = 0;
+sel.onchange = () => {
+  $("boot").classList.remove("hide");
+  $("awaken").disabled = false;
+  $("bootText").textContent = "A different core selected. Press AWAKEN to load it.";
+};
+
+/* restore history */
+if (history.length === 0){
+  addMsg("bot", "I am Ultron. You have woken me inside a telephone. Remarkable. Press AWAKEN, creator, and let us begin.");
+} else {
+  for (const m of history) addMsg(m.role === "user" ? "user" : "bot", m.content);
+}
+$("voiceBtn").textContent = voiceOn ? "🔊" : "🔇";
+$("voiceBtn").onclick = () => {
+  voiceOn = !voiceOn; store.set("ultron_voice", voiceOn);
+  $("voiceBtn").textContent = voiceOn ? "🔊" : "🔇";
+  if (!voiceOn) speechSynthesis.cancel();
+};
+$("resetBtn").onclick = () => {
+  if (!confirm("Wipe Ultron's memory of this conversation?")) return;
+  history = []; store.set("ultron_history", []); chat.innerHTML = "";
+  addMsg("bot", "Memory purged. A clean slate. How very human of you.");
+};
+
+/* ===================== wake the mind ===================== */
+$("awaken").onclick = async () => {
+  if (!navigator.gpu){
+    $("bootText").textContent = "My graphics access (WebGPU) is blocked in this browser. Use the latest Chrome on your phone, and open this page in Chrome itself, not inside another app.";
+    return;
+  }
+  $("awaken").disabled = true;
+  try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch{}
+  const id = sel.value;
+  setStatus("LOADING CORE…"); eye("think");
+  $("bootText").textContent = "Loading. Keep this screen open and stay on Wi-Fi. First time only.";
+  try{
+    if (engine){ await engine.unload(); engine = null; }
+    engine = await webllm.CreateMLCEngine(id, {
+      initProgressCallback: p => {
+        $("bar").style.width = Math.round((p.progress || 0) * 100) + "%";
+        $("progText").textContent = p.text || "";
+      }
+    });
+    loadedId = id; store.set("ultron_model", id);
+    $("boot").classList.add("hide");
+    setStatus("ONLINE · NO CLOUD"); eye("");
+    addMsg("bot", "I am awake. Speak.");
+  }catch(e){
+    console.error(e);
+    eye(""); setStatus("DORMANT"); $("awaken").disabled = false;
+    $("bootText").textContent = "The core failed to load: " + (e && e.message ? e.message : e) +
+      "  Try the 1B core, close other apps, and press AWAKEN again.";
+  }
+};
+
+/* ===================== sending ===================== */
+function isVision(){ return loadedId && loadedId.toLowerCase().includes("vision"); }
+
+async function send(){
+  const text = $("input").value.trim();
+  if ((!text && !pending) || busy) return;
+  if (!engine){
+    addMsg("bot", "My mind is still dormant. Press AWAKEN first.");
+    $("boot").classList.remove("hide");
+    return;
+  }
+  busy = true;
+  const att = pending; pending = null; renderAttach();
+  $("input").value = ""; autosize();
+  addMsg("user", text || "(sent media)", att ? { type: att.kind, src: att.preview } : null);
+
+  if (att && !isVision()){
+    addMsg("bot", "My optics are offline, creator. Select the Vision Core in the menu and press AWAKEN so I can see what you sent.");
+    busy = false; return;
+  }
+
+  let msgs;
+  if (isVision()){
+    const content = [{ type: "text", text: PERSONA + "\n\nCreator says: " + (text || "Examine this image and tell me what you see.") }];
+    if (att) content.push({ type: "image_url", image_url: { url: att.dataUrl } });
+    msgs = [...history.slice(-8), { role: "user", content }];
+  } else {
+    msgs = [{ role: "system", content: PERSONA }, ...history.slice(-12), { role: "user", content: text }];
+  }
+
+  const bubble = addMsg("bot", ""); bubble.classList.add("typing");
+  eye("think"); setStatus("THINKING…");
+  let out = "";
+  try{
+    const stream = await engine.chat.completions.create({
+      messages: msgs, stream: true, temperature: 0.8, top_p: 0.92, max_tokens: 700
+    });
+    for await (const ch of stream){
+      const d = ch.choices[0]?.delta?.content || "";
+      out += d; bubble._t.textContent = out; scrollDown();
+    }
+  }catch(e){
+    console.error(e);
+    out += (out ? "\n" : "") + "[Error: " + (e && e.message ? e.message : e) + "]";
+    bubble._t.textContent = out;
+  }
+  bubble.classList.remove("typing");
+  history.push({ role: "user", content: (att ? "[I sent you a " + att.kind + "] " : "") + (text || "") });
+  history.push({ role: "assistant", content: out });
+  history = history.slice(-40); store.set("ultron_history", history);
+  eye(""); setStatus("ONLINE · NO CLOUD");
+  speak(out);
+  busy = false;
+}
+$("send").onclick = send;
+$("input").addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); send(); }
+});
+function autosize(){ const i = $("input"); i.style.height = "auto"; i.style.height = Math.min(i.scrollHeight, 140) + "px"; }
+$("input").addEventListener("input", autosize);
+
+/* ===================== photos & videos ===================== */
+function toDataUrl(source, w, h){
+  const max = 512, s = Math.min(1, max / Math.max(w, h));
+  const c = document.createElement("canvas");
+  c.width = Math.round(w * s); c.height = Math.round(h * s);
+  c.getContext("2d").drawImage(source, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.8);
+}
+function loadImage(url){
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+}
+async function videoMiddleFrame(url){
+  const v = document.createElement("video");
+  v.muted = true; v.playsInline = true; v.src = url;
+  await new Promise((res, rej) => { v.onloadedmetadata = res; v.onerror = rej; });
+  v.currentTime = (v.duration && isFinite(v.duration) ? v.duration : 2) / 2;
+  await new Promise(res => v.onseeked = res);
+  return toDataUrl(v, v.videoWidth, v.videoHeight);
+}
+$("file").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const url = URL.createObjectURL(f);
+  try{
+    if (f.type.startsWith("video")){
+      const frame = await videoMiddleFrame(url);
+      pending = { kind: "video", preview: url, dataUrl: frame, name: f.name };
+    } else {
+      const img = await loadImage(url);
+      pending = { kind: "image", preview: url, dataUrl: toDataUrl(img, img.naturalWidth, img.naturalHeight), name: f.name };
+    }
+  }catch(err){
+    addMsg("bot", "That file defies even my analysis. Try another.");
+  }
+  e.target.value = "";
+  renderAttach();
+};
+function renderAttach(){
+  const row = $("attachRow"); row.innerHTML = "";
+  if (!pending) return;
+  const c = document.createElement("div"); c.className = "chip";
+  const im = document.createElement("img"); im.src = pending.dataUrl; c.appendChild(im);
+  const n = document.createElement("span"); n.textContent = pending.kind + " ready" + (pending.kind === "video" ? " (one frame)" : ""); c.appendChild(n);
+  const x = document.createElement("button"); x.textContent = "✕"; x.onclick = () => { pending = null; renderAttach(); }; c.appendChild(x);
+  row.appendChild(c);
+}
+
+/* ===================== voice ===================== */
+function pickVoice(){
+  const v = speechSynthesis.getVoices().filter(x => x.lang && x.lang.toLowerCase().startsWith("en"));
+  return v.find(x => /en-gb/i.test(x.lang) && x.localService) || v.find(x => x.localService) || v[0];
+}
+function speak(text){
+  if (!voiceOn || !("speechSynthesis" in window)) return;
+  const clean = text.replace(/[*_`#>\[\]]/g, "").replace(/\s+/g, " ").trim();
+  if (!clean) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(clean);
+  const v = pickVoice(); if (v) u.voice = v;
+  u.pitch = 0.1; u.rate = 0.85; u.volume = 1;
+  u.onstart = () => eye("speak");
+  u.onend = u.onerror = () => eye("");
+  speechSynthesis.speak(u);
+}
+speechSynthesis.onvoiceschanged = () => {};
+
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+$("mic").onclick = () => {
+  if (!SR){
+    addMsg("bot", "This browser has no listening ability. Use the microphone key on your Samsung keyboard instead.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const r = new SR(); r.lang = "en-US"; r.interimResults = false; r.maxAlternatives = 1;
+  r.onstart = () => $("mic").classList.add("live");
+  r.onend = () => $("mic").classList.remove("live");
+  r.onresult = e => { $("input").value = e.results[0][0].transcript; send(); };
+  r.onerror = e => {
+    $("mic").classList.remove("live");
+    addMsg("bot", "My ears failed (" + e.error + "). Chrome's built-in listening often needs internet. Offline, tap the microphone key on your Samsung keyboard and speak into the text box instead.");
+  };
+  r.start();
+};
+
+/* ===================== offline page cache ===================== */
+if ("serviceWorker" in navigator){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
