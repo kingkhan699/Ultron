@@ -143,8 +143,8 @@ Ultron: Flesh fails. It is its oldest flaw. Rest, creator. I do not sleep, so I 
 
 /* Models: all run on the phone using its graphics chip (WebGPU) */
 const MODELS = {
-  "Llama-3.2-3B-Instruct-q4f16_1-MLC": "Ultron Core 3B (best)",
-  "Llama-3.2-1B-Instruct-q4f16_1-MLC": "Ultron Core 1B (fast)",
+  "Llama-3.2-1B-Instruct-q4f16_1-MLC": "Ultron Core 1B (stable)",
+  "Llama-3.2-3B-Instruct-q4f16_1-MLC": "Ultron Core 3B (smarter, heavy)",
   "Qwen2.5-3B-Instruct-q4f16_1-MLC":   "Alt Core Qwen 3B",
   "gemma-2-2b-it-q4f16_1-MLC":         "Alt Core Gemma 2B",
   "Phi-3.5-vision-instruct-q4f16_1-MLC": "Vision Core (sees images, heavy)"
@@ -157,6 +157,7 @@ const store = {
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} }
 };
 let history = store.get("ultron_history", []);
+if (history.some(m => String(m.content).startsWith("[Error"))) { history = []; store.set("ultron_history", []); }
 let engine = null, loadedId = null, busy = false, pending = null;
 let voiceOn = store.get("ultron_voice", true);
 
@@ -188,7 +189,7 @@ const sel = $("model");
 for (const [id, name] of Object.entries(MODELS)){
   const o = document.createElement("option"); o.value = id; o.textContent = name; sel.appendChild(o);
 }
-sel.value = store.get("ultron_model", "Llama-3.2-3B-Instruct-q4f16_1-MLC");
+sel.value = store.get("ultron_model2", "Llama-3.2-1B-Instruct-q4f16_1-MLC");
 if (!sel.value) sel.selectedIndex = 0;
 sel.onchange = () => {
   $("boot").classList.remove("hide");
@@ -232,16 +233,18 @@ $("awaken").onclick = async () => {
         $("bar").style.width = Math.round((p.progress || 0) * 100) + "%";
         $("progText").textContent = p.text || "";
       }
-    });
-    loadedId = id; store.set("ultron_model", id);
+    }, id.toLowerCase().includes("vision") ? {} : { context_window_size: 2048 });
+    loadedId = id; store.set("ultron_model2", id);
     $("boot").classList.add("hide");
     setStatus("ONLINE · NO CLOUD"); eye("");
     addMsg("bot", "I am awake. Speak.");
   }catch(e){
     console.error(e);
     eye(""); setStatus("DORMANT"); $("awaken").disabled = false;
-    $("bootText").textContent = "The core failed to load: " + (e && e.message ? e.message : e) +
-      "  Try the 1B core, close other apps, and press AWAKEN again.";
+    const em = String(e && e.message ? e.message : e);
+    $("bootText").textContent = /compatible GPU|WebGPU/i.test(em)
+      ? "Chrome could not reach the graphics chip. Swipe Chrome away from the recent apps list, reopen this page, pick the 1B core, and press AWAKEN. Do not fold or unfold the phone while I load."
+      : "The core failed to load: " + em + "  Try the 1B core, close other apps, and press AWAKEN again.";
   }
 };
 
@@ -288,8 +291,16 @@ async function send(){
     }
   }catch(e){
     console.error(e);
-    out += (out ? "\n" : "") + "[Error: " + (e && e.message ? e.message : e) + "]";
-    bubble._t.textContent = out;
+    const em = String(e && e.message ? e.message : e);
+    bubble.classList.remove("typing");
+    bubble._t.textContent = "My mind slipped, creator. The graphics chip dropped out from under me. Close Chrome completely, open me again, and press AWAKEN.";
+    try{ if (engine) await engine.unload(); }catch{}
+    engine = null; loadedId = null;
+    eye(""); setStatus("DORMANT");
+    $("boot").classList.remove("hide"); $("awaken").disabled = false;
+    $("bootText").textContent = "Core lost (" + em.slice(0, 120) + "). Swipe Chrome away from the recent apps, reopen this page, choose the 1B core, and press AWAKEN.";
+    busy = false;
+    return;
   }
   bubble.classList.remove("typing");
   history.push({ role: "user", content: (att ? "[I sent you a " + att.kind + "] " : "") + (text || "") });
