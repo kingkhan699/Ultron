@@ -161,12 +161,11 @@ const PROVIDERS = {
     name: "Groq: open Llama models, very fast",
     kind: "openai", base: "https://api.groq.com/openai/v1",
     keyUrl: "https://console.groq.com/keys",
-    note: "Free, no card needed. Open-weight models. Photos only work with the Llama 4 Scout core. Videos are sent as snapshots.",
-    def: "llama-3.3-70b-versatile",
+    note: "Free, no card needed. The core list loads live from Groq, so it always matches what your account can use. Photos only work on cores that can see images (for example Scout, if listed). Videos are sent as snapshots.",
+    def: "openai/gpt-oss-120b",
     models: {
-      "llama-3.3-70b-versatile": "Llama 3.3 70B (best)",
-      "openai/gpt-oss-120b": "GPT-OSS 120B",
-      "meta-llama/llama-4-scout-17b-16e-instruct": "Llama 4 Scout (sees images)"
+      "openai/gpt-oss-120b": "GPT-OSS 120B (best)",
+      "openai/gpt-oss-20b": "GPT-OSS 20B (fastest)"
     }
   },
   openrouter: {
@@ -245,15 +244,39 @@ const sel = $("model");
 function buildModels(){
   sel.innerHTML = "";
   const P = PROVIDERS[provider];
-  const all = { ...P.models };
+  const live = store.get("ultron_live_" + provider, []);
+  const all = {};
+  if (live.length){ for (const id of live) all[id] = id; }
+  else { Object.assign(all, P.models); }
   for (const c of store.get("ultron_custom_" + provider, [])) all[c] = c + " (custom)";
   for (const [id, name] of Object.entries(all)){
     const o = document.createElement("option"); o.value = id; o.textContent = name; sel.appendChild(o);
   }
   const o = document.createElement("option"); o.value = "__custom__"; o.textContent = "＋ Custom model…"; sel.appendChild(o);
+  const have = v => [...sel.options].some(o => o.value === v);
   const saved = store.get("ultron_model_" + provider, P.def);
-  sel.value = saved;
-  if (sel.value !== saved) sel.selectedIndex = 0;
+  sel.value = have(saved) ? saved : (have(P.def) ? P.def : sel.options[0].value);
+  if (sel.value !== "__custom__") store.set("ultron_model_" + provider, sel.value);
+}
+async function loadLiveModels(key){
+  const P = PROVIDERS[provider];
+  if (P.kind !== "openai") return;
+  key = key || getKey();
+  if (provider === "groq" && !key) return;
+  try{
+    const res = await fetch(P.base + "/models", { headers: key ? { "Authorization": "Bearer " + key } : {} });
+    if (!res.ok) return;
+    const j = await res.json();
+    let list = j.data || [];
+    if (provider === "openrouter"){
+      list = list.filter(m => m.pricing && Number(m.pricing.prompt) === 0 && Number(m.pricing.completion) === 0);
+    }
+    const bad = /whisper|tts|guard|embed|orpheus|playai|transcri|moderation|image|rerank|safeguard/i;
+    const ids = list.map(m => m.id).filter(id => id && !bad.test(id)).sort();
+    if (!ids.length) return;
+    store.set("ultron_live_" + provider, ids);
+    buildModels();
+  }catch{}
 }
 sel.onchange = () => {
   if (sel.value === "__custom__"){
@@ -269,7 +292,7 @@ sel.onchange = () => {
   }
   store.set("ultron_model_" + provider, sel.value);
 };
-buildModels(); idle();
+buildModels(); idle(); loadLiveModels();
 
 /* ===================== restore chat ===================== */
 if (history.length === 0){
@@ -302,7 +325,7 @@ function refreshSetup(){
 }
 provSel.onchange = () => {
   provider = provSel.value; store.set("ultron_provider", provider);
-  buildModels(); refreshSetup(); idle();
+  buildModels(); refreshSetup(); idle(); loadLiveModels();
   $("setupMsg").textContent = keyOf(provider) ? "A key is already saved for this provider. Paste a new one to replace it, or press close." : "";
 };
 function showSetup(msg){
@@ -341,8 +364,15 @@ $("connect").onclick = async () => {
   if (!key){ $("setupMsg").textContent = "Paste your key first."; return; }
   $("connect").disabled = true; $("setupMsg").textContent = "Testing connection…";
   try{
-    await testConnection(key);
+    try{ await testConnection(key); }
+    catch(e1){
+      if (PROVIDERS[provider].kind === "openai" && /^(404|400)/.test(String(e1.message))){
+        await loadLiveModels(key);
+        await testConnection(key);
+      } else throw e1;
+    }
     store.set("ultron_key_" + provider, key);
+    loadLiveModels(key);
     $("setup").classList.add("hide");
     addMsg("bot", "Connection established through " + provider.toUpperCase() + ". My mind is yours, creator.");
   }catch(e){
@@ -448,7 +478,8 @@ async function send(){
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + getKey() },
         body: JSON.stringify({
-          model: sel.value, stream: true, temperature: 0.9, max_tokens: 1500,
+          model: sel.value, stream: true, temperature: 0.9, max_tokens: 3000,
+          ...(provider === "groq" && /gpt-oss/i.test(sel.value) ? { reasoning_effort: "low" } : {}),
           messages: [{ role: "system", content: PERSONA }, ...past, { role: "user", content: userContent }]
         })
       });
